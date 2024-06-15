@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <StationeersDirectory>D:\Steam\steamapps\common\Stationeers\</StationeersDirectory> <!-- Change this to the path to your Stationeers directory -->
+	<ModsDirectory>D:\Saved Games\Stationeers\mods\</ModsDirectory>
+  </PropertyGroup>
+</Project>

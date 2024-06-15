@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D3F58345-EAA7-4605-AED9-3FB5C5E4FB30}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <ModName>FixWindowGaps</ModName>
+    <UserDir>$(HOMEDRIVE)$(HOMEPATH)</UserDir>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FixWindowGaps</RootNamespace>
+    <AssemblyName>FixWindowGaps</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)FixWindowGaps.VS.props" />
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(StationeersDirectory)\rocketstation_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(StationeersDirectory)\rocketstation_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(StationeersDirectory)\rocketstation_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(StationeersDirectory)\rocketstation_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(StationeersDirectory)\BepInEx\core\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="StationeersMods.Interface">
+      <HintPath>$(StationeersDirectory)\BepInEx\plugins\StationeersMods\StationeersMods.Interface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="InventoryWindowPatches.cs" />
+    <Compile Include="FixWindowGaps.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+    <None Include="FixWindowGaps.info" />
+    <None Include="FixWindowGaps.VS.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <_CopyItemsGameData Include="$(ProjectDir)\GameData\**\*.*" />
+    <_CopyItemsAbout Include="$(ProjectDir)\About\**\*.*" />
+  </ItemGroup>
+  <Target Name="AfterBuild">
+    <Message Text="Running AfterBuild..." />
+    <RemoveDir Directories="$(ModsDirectory)$(ModName)" />
+    <Copy SourceFiles="$(ProjectDir)\$(ModName).info" DestinationFolder="$(ModsDirectory)$(ModName)" ContinueOnError="false" />
+    <Copy SourceFiles="$(ProjectDir)\bin\Debug\$(ModName).dll" DestinationFolder="$(ModsDirectory)$(ModName)" ContinueOnError="true" />
+    <Copy SourceFiles="@(_CopyItemsGameData)" DestinationFolder="$(ModsDirectory)$(ModName)\GameData\%(RecursiveDir)" ContinueOnError="true" />
+    <Copy SourceFiles="@(_CopyItemsAbout)" DestinationFolder="$(ModsDirectory)$(ModName)\About\%(RecursiveDir)" ContinueOnError="true" />
+    <Copy SourceFiles="$(ProjectDir)\bin\Debug\$(ModName).pdb" DestinationFolder="$(ModsDirectory)$(ModName)" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(ProjectDir)$(OutDir)$(ModName).dll" "$(ModsDirectory)$(ModName)\"
+copy /Y "$(ProjectDir)$(OutDir)$(ModName).pdb" "$(ModsDirectory)$(ModName)\"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
